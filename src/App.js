@@ -9,11 +9,13 @@ import ActionProvider from './ActionProvider'
 function App() {
   return (
     <>
-       <Chatbot
-        config={config}
-        messageParser={MessageParser}
-        actionProvider={ActionProvider}
-      />
+      <div className='flex justify-end'>
+        <Chatbot
+          config={config}
+          messageParser={MessageParser}
+          actionProvider={ActionProvider}
+        />
+      </div>
     </>
   );
 }
