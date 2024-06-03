@@ -1,10 +1,13 @@
 import { createChatBotMessage } from 'react-chatbot-kit';
 import DogPicture from './components/DogPicture/DogPicture.jsx'
+// import Todos from './components/todos/Todos.jsx';
 
 const botName = 'Chat Bot_241_Business';
 
 const config = {
-  initialMessages: [createChatBotMessage(`Hi! I'm ${botName}`)],
+  initialMessages: [createChatBotMessage(`Hi! I'm ${botName}`, {
+
+  })],
   botName: botName,
   customStyles: {
     botMessageBox: {
@@ -18,9 +21,7 @@ const config = {
     todos: []
   },
   widget: [
-    {
-
-    }
+    
   ],
   widgets: [
     {

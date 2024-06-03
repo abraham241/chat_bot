@@ -19,7 +19,7 @@ function App() {
           </p>
           <ul>
             <li>1. Dites 'Bonjour'</li>
-            <li>2. Ecrivez quelque chose avec le mot  'chien'</li>
+            <li>2. Ecrivez quelque chose avec le mot  'chien' pour avoir un chien</li>
           </ul>
         </div>
         <div className='flex justify-end md:w-1/2 p-10'>
@@ -30,7 +30,6 @@ function App() {
           />
         </div>
       </div>
-      
     </>
   );
 }
