@@ -4,8 +4,11 @@ import React from 'react';
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
     if (message.includes('')) {
-      // rajouter par moi j'ai enleve le message par défaut
+      // j'ai rajouter par moi j'ai enleve le message par défaut a la ligne 6
       actions.handleHello();
+    }
+    if (message.includes('chien')) {
+      actions.handleDog();
     }
   };
 
