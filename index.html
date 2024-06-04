@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        #chatbot {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-height: 80vh;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            overflow-y: auto;
+        }
+        #chatbot.active {
+            display: block;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .button-grid button {
+            flex: 1 1 calc(50% - 0.5rem);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div id="chatbot" class="p-4 h-96">
+    <div class="bg-green-500 text-white p-2 flex justify-between">
+        <img src="image/bamboologo.png" class="w-12 h-12 rounded-full" alt="">
+        <p>
+            Bienvenue sur le chatbot de Bamboo,
+        </p>
+    </div>
+    <div id="messages" class="mb-4"></div>
+    <div id="input-area" class="mt-56">
+        <input id="userInput" type="text" class="border p-2 rounded w-full pt-2" placeholder="Tapez votre message...">
+        <button id="sendButton" class="bg-green-500 text-white p-2 rounded w-full">Envoyer</button>
+    </div>
+</div>
+
+<button id="chatbotToggle" class="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-full shadow-lg">
+    Chat
+</button>
+
+<script>
+    const chatbotToggle = document.getElementById('chatbotToggle');
+    const chatbot = document.getElementById('chatbot');
+    const sendButton = document.getElementById('sendButton');
+    const userInput = document.getElementById('userInput');
+    const messages = document.getElementById('messages');
+
+    chatbotToggle.addEventListener('click', () => {
+        chatbot.classList.toggle('active');
+    });
+
+    sendButton.addEventListener('click', () => {
+        const userText = userInput.value.trim();
+        if (userText) {
+            displayUserMessage(userText);
+            userInput.value = '';
+            displayLoading();
+            setTimeout(() => {
+                removeLoading();
+                displayBotWelcome();
+                setTimeout(displayBotOptions, 500);
+            }, 2000);
+        }
+    });
+
+    function displayUserMessage(text) {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'bg-blue-100 p-2 rounded mb-2 text-right';
+        messageElement.innerText = text;
+        messages.appendChild(messageElement);
+    }
+
+    function displayLoading() {
+        const loadingElement = document.createElement('div');
+        loadingElement.className = 'loader mb-2';
+        loadingElement.id = 'loading';
+        messages.appendChild(loadingElement);
+    }
+
+    function removeLoading() {
+        const loadingElement = document.getElementById('loading');
+        if (loadingElement) {
+            loadingElement.remove();
+        }
+    }
+
+    function displayBotWelcome() {
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.className = 'bg-gray-200 p-2 rounded mb-2 flex items-center';
+        welcomeMessage.innerHTML = `
+            <img src="/image/bamboologo.png" alt="Logo" class="w-12 h-12 rounded-full mr-2">
+            <div>Bienvenue sur le chatbot de Bamboo, comment pouvons-nous vous aider ?</div>
+        `;
+        messages.appendChild(welcomeMessage);
+    }
+
+    function displayBotOptions() {
+        const options = `
+            <div class="button-grid mb-2">
+                <button class="border border-2 border-green-500 p-2 rounded" onclick="handleOptionClick('assistance', 'Demande d\\'assistance')">Demande d'assistance</button>
+                <button class="border border-2 border-green-500 p-2 rounded" onclick="handleOptionClick('information', 'Demande d\\'information')">Demande d'information</button>
+                <button class="border border-2 border-green-500 p-2 rounded" onclick="handleOptionClick('reclamation', 'Réclamation')">Réclamation</button>
+                <button class="border border-2 border-green-500 p-2 rounded" onclick="handleOptionClick('rendezvous', 'Demande de rendez-vous')">Demande de rendez-vous</button>
+            </div>
+        `;
+        messages.innerHTML += options;
+    }
+
+    function handleOptionClick(type, text) {
+        displayUserMessage(text);
+        displayLoading();
+        setTimeout(() => {
+            removeLoading();
+            displaySubOptions(type);
+        }, 1000);
+    }
+
+    function displaySubOptions(type) {
+        let subOptions = '';
+        switch (type) {
+            case 'assistance':
+                subOptions = `
+                    <div class="button-grid mb-2">
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Dépot')">Dépot</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Acces au compte')">Acces au compte</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Virement')">Virement</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Retrait')">Retrait</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Numéro de compte')">Numéro de compte</button>
+                    </div>
+                `;
+                break;
+            case 'information':
+                subOptions = `
+                    <div class="button-grid mb-2">
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Horaire')">Horaire</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Ouverture de compte')">Ouverture de compte</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Localisation')">Localisation</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Numéro du gestionnaire')">Numéro du gestionnaire</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Obtenir un chequier')">Obtenir un chequier</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('E-Tontine')">E-Tontine</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Transfert')">Transfert</button>
+                    </div>
+                `;
+                break;
+            case 'reclamation':
+                subOptions = `
+                    <div class="button-grid mb-2">
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Type 1')">Type 1</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Type 2')">Type 2</button>
+                    </div>
+                `;
+                break;
+            case 'rendezvous':
+                subOptions = `
+                    <div class="button-grid mb-2">
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Agence Port-Gentil')">Agence Port-Gentil</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Agence Petit Paris')">Agence Petit Paris</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Agence Hyperion')">Agence Hyperion</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Agence Jiji')">Agence Jiji</button>
+                        <button class="border border-2 border-green-500 p-2 rounded" onclick="displayUserMessage('Agence Moanda')">Agence Moanda</button>
+                    </div>
+                `;
+                break;
+        }
+        messages.innerHTML += subOptions;
+    }
+</script>
+
+</body>
+</html>
